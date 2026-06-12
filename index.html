@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Udubs Shield</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen antialiased selection:bg-cyan-200">
+
+    <div class="absolute top-0 left-0 right-0 h-1.5 bg-[#BEAA75]"></div>
+
+    <div class="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        
+        <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-slate-200">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-black tracking-widest uppercase bg-[#0A1A5C] text-white px-2 py-0.5 rounded-sm">Campus MVP</span>
+                </div>
+                <h1 class="text-3xl font-black text-[#0A1A5C] tracking-tight mt-1">
+                    Udubs Shield<span class="text-cyan-500">.</span>
+                </h1>
+                <p class="text-xs font-medium text-slate-500 mt-0.5">Check your assignment metrics before uploading to Ikamva.</p>
+            </div>
+            
+            <div class="flex items-center gap-2.5 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-xs self-start sm:self-center">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                </span>
+                <p class="text-[11px] font-bold tracking-wide uppercase text-slate-500">Privacy Active</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 md:p-6 shadow-xs">
+                <div class="flex items-center justify-between mb-3">
+                    <label class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">Drop text here</label>
+                    <span id="charCount" class="text-xs text-slate-400 font-medium">0 characters</span>
+                </div>
+                
+                <textarea id="textInput" oninput="updateCharCount()" 
+                    class="w-full h-72 md:h-96 p-4 bg-slate-50 text-slate-900 rounded-xl border border-slate-200 focus:outline-none focus:ring-3 focus:ring-cyan-100 focus:border-cyan-400 transition-all resize-none text-sm leading-relaxed placeholder:text-slate-400" 
+                    placeholder="Paste your essay body paragraphs or assessment sections here..."></textarea>
+                
+                <button id="scanBtn" onclick="runScan()" 
+                    class="w-full mt-4 bg-[#0A1A5C] hover:bg-[#071344] text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 cursor-pointer shadow-sm hover:shadow-md flex items-center justify-center gap-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-cyan-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                    </svg>
+                    Scan your assignment
+                </button>
+            </div>
+
+            <div class="lg:col-span-5 space-y-6">
+                
+                <div id="placeholderCard" class="bg-gradient-to-br from-slate-50 to-slate-100 border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center text-slate-400 text-xs flex flex-col items-center justify-center h-48 lg:h-[480px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 mb-2.5 text-slate-300">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.904-4.452L21 9l-3.096-3.096L9.813 15.904z" />
+                    </svg>
+                    Ready to analyse. Drop your drafting blocks into the workspace.
+                </div>
+
+                <div id="resultsArea" class="hidden space-y-6">
+                    
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">Est. Turnitin Flag Index</p>
+                            <h2 id="verdictText" class="text-sm font-bold text-slate-900 mt-0.5">Analyzing Data...</h2>
+                        </div>
+                        <div class="text-right">
+                            <span id="scoreBadge" class="text-4xl font-black tracking-tight text-slate-900">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+                        <label class="text-[11px] font-bold tracking-wider text-slate-400 uppercase block mb-3">Structural Heatmap Matrix</label>
+                        <div id="heatmapContainer" class="custom-scroll p-4 bg-slate-50 rounded-xl border border-slate-200 h-48 overflow-y-auto text-sm leading-relaxed text-slate-700"></div>
+                        <p class="text-[11px] text-slate-400 mt-2">
+                            ℹ️ Highlighted sentences present high patterns of predictable text uniformity.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-[#0A1A5C] to-[#06103b] rounded-2xl p-5 text-white shadow-xs">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-cyan-500 text-[#0A1A5C] text-[9px] font-black uppercase px-2 py-0.5 rounded-sm">Action Plan</span>
+                            <h3 class="text-xs font-bold tracking-wider text-cyan-400 uppercase">Humanising Recommendations</h3>
+                        </div>
+                        <ul id="suggestionList" class="space-y-2.5 text-xs text-slate-200 list-none pl-0"></ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
