@@ -59,7 +59,7 @@ async function runScan() {
             formData.append('text', textInput);
         }
 
-        const response = await fetch('http://127.0.0.1:8000/detect', {
+        const response = await fetch('/detect', {
             method: 'POST',
             body: formData
         });
