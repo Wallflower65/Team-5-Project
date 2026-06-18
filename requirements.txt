@@ -1,0 +1,4 @@
+fastapi
+copyleaks
+python-docx
+pypdf
