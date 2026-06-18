@@ -6,6 +6,7 @@ from typing import Optional
 
 from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from copyleaks.copyleaks import Copyleaks
 from copyleaks.models.submit.ai_detection_document import NaturalLanguageDocument
