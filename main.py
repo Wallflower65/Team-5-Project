@@ -12,6 +12,8 @@ from copyleaks.models.submit.ai_detection_document import NaturalLanguageDocumen
 
 app = FastAPI()
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Allow the frontend (served from a different origin/port) to call this API
 app.add_middleware(
     CORSMiddleware,
