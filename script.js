@@ -1,6 +1,31 @@
+let selectedFile = null;
+
 function updateCharCount() {
     const text = document.getElementById('textInput').value;
     document.getElementById('charCount').innerText = `${text.length} characters`;
+}
+
+function handleFileSelect() {
+    const fileInput = document.getElementById('fileInput');
+    const fileLabel = document.getElementById('fileLabel');
+    const clearFileBtn = document.getElementById('clearFileBtn');
+
+    if (fileInput.files.length > 0) {
+        selectedFile = fileInput.files[0];
+        fileLabel.innerText = selectedFile.name;
+        clearFileBtn.classList.remove('hidden');
+    } else {
+        selectedFile = null;
+        fileLabel.innerText = "Choose .txt, .docx, or .pdf file";
+        clearFileBtn.classList.add('hidden');
+    }
+}
+
+function clearFile() {
+    selectedFile = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('fileLabel').innerText = "Choose .txt, .docx, or .pdf file";
+    document.getElementById('clearFileBtn').classList.add('hidden');
 }
 
 async function runScan() {
@@ -10,11 +35,10 @@ async function runScan() {
     const resultsArea = document.getElementById('resultsArea');
     const scoreBadge = document.getElementById('scoreBadge');
     const verdictText = document.getElementById('verdictText');
-    const heatmapContainer = document.getElementById('heatmapContainer');
     const suggestionList = document.getElementById('suggestionList');
 
-    if (!textInput.trim()) {
-        alert("Please paste some text before scanning.");
+    if (!textInput.trim() && !selectedFile) {
+        alert("Please paste some text or upload a file before scanning.");
         return;
     }
 
@@ -27,22 +51,31 @@ async function runScan() {
 
     try {
         const formData = new FormData();
-        formData.append('text', textInput);
 
-        const response = await fetch('http://127.0.0.1:8000/scan', {
+        // File takes priority over pasted text, matching backend behavior
+        if (selectedFile) {
+            formData.append('file', selectedFile);
+        } else {
+            formData.append('text', textInput);
+        }
+
+        const response = await fetch('http://127.0.0.1:8000/detect', {
             method: 'POST',
             body: formData
         });
 
-        if (!response.ok) throw new Error("Server connection error");
+        if (!response.ok) {
+            const errBody = await response.json().catch(() => null);
+            throw new Error(errBody?.detail || "Server connection error");
+        }
 
         const result = await response.json();
 
         placeholderCard.classList.add('hidden');
         resultsArea.classList.remove('hidden');
-        
+
         scoreBadge.innerText = `${result.percentage}%`;
-        
+
         if (result.percentage >= 50) {
             scoreBadge.className = "text-4xl font-black tracking-tight text-rose-600";
             verdictText.innerText = "High Risk Level";
@@ -56,28 +89,6 @@ async function runScan() {
             verdictText.innerText = "Clear Safe Margin";
             verdictText.className = "text-sm font-bold text-emerald-600 mt-0.5";
         }
-
-        heatmapContainer.innerHTML = '';
-        
-        result.sentences.forEach(item => {
-            const sentenceArray = item.text.match(/[^.!?]+[.!?]*(\s*|$)/g) || [item.text];
-            
-            sentenceArray.forEach(sentenceStr => {
-                if (!sentenceStr.trim()) return;
-                
-                const span = document.createElement('span');
-                span.innerText = sentenceStr;
-                
-                if (item.ai_prob > 0.65 || (result.percentage >= 50 && item.ai_prob > 0.3)) {
-                    span.className = "heatmap-highlight cursor-help";
-                    span.title = `${Math.round(item.ai_prob * 100 || result.percentage)}% Match Pattern`;
-                } else {
-                    span.className = "text-slate-700";
-                }
-                
-                heatmapContainer.appendChild(span);
-            });
-        });
 
         suggestionList.innerHTML = '';
         let advice = [];
@@ -100,7 +111,7 @@ async function runScan() {
         });
 
     } catch (err) {
-        alert("Could not connect to the backend server.");
+        alert(err.message || "Could not connect to the backend server.");
         console.error(err);
     } finally {
         scanBtn.innerHTML = `
