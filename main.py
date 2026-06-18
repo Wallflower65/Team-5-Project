@@ -19,6 +19,14 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Serve index.html at the root path
+@app.get("/")
+async def root():
+    index_path = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return {"message": "Welcome to Team-5 API"}
+
 # Allow the frontend (served from a different origin/port) to call this API
 app.add_middleware(
     CORSMiddleware,
