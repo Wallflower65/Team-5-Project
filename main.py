@@ -1,3 +1,4 @@
+import os
 import asyncio
 import io
 import json
@@ -12,6 +13,9 @@ from copyleaks.copyleaks import Copyleaks
 from copyleaks.models.submit.ai_detection_document import NaturalLanguageDocument
 
 app = FastAPI()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
