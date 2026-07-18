@@ -52,7 +52,7 @@ def run_detection(text: str, scan_id: str):
     """Run AI detection using Copyleaks SDK. Synchronous - call via run_in_executor."""
     auth_token = get_auth_token()
     document = NaturalLanguageDocument(text)
-    document.set_sandbox(True)
+    document.set_sandbox(False)
     try:
         return Copyleaks.AiDetectionClient.submit_natural_language(
             auth_token, scan_id, document
