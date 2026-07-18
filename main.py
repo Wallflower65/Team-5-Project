@@ -36,8 +36,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-EMAIL_ADDRESS = "mutonkoleerico@gmail.com"
-API_KEY = "c1f28242-3bc6-4880-8a7c-20d1113ccb54"
+EMAIL_ADDRESS = "Crisp8794@gmail.com"
+API_KEY = "3dc42775-09a4-46f4-beb6-caf91602665f"
 
 
 def get_auth_token():
