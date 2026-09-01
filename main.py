@@ -19,8 +19,8 @@ from copyleaks.models.submit.ai_detection_document import NaturalLanguageDocumen
 # ------------------------------------------------------------
 load_dotenv()
 
-EMAIL_ADDRESS = os.getenv("COPyleAKS_EMAIL")
-API_KEY = os.getenv("COPyleAKS_API_KEY")
+EMAIL_ADDRESS = os.getenv("COPILEAKS_EMAIL")
+API_KEY = os.getenv("COPILEAKS_API_KEY")
 ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "http://localhost:3000")
 MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE", 5 * 1024 * 1024))  # 5 MB
 AUTH_TOKEN = os.getenv("API_AUTH_TOKEN")  # optional; if set, clients must send it
